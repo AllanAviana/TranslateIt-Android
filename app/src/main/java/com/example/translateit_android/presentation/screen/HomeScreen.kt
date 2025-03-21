@@ -16,8 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,7 +30,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
@@ -118,21 +115,15 @@ fun SlideToPlayButton(
     modifier: Modifier = Modifier,
     onSlideComplete: () -> Unit
 ) {
-    // Altura do botão em DP
     val buttonHeight = 80.dp
 
-    // Offset horizontal atual do círculo
     var offsetX by remember { mutableStateOf(0f) }
 
-    // Para converter DP <-> PX
     val localDensity = LocalDensity.current
 
-    // Largura total do botão
     val totalWidth = 360.dp
 
-    // Convertemos a largura do botão de DP para PX
     val maxOffsetPx = with(localDensity) {
-        // Subtrai a largura do círculo para ele não vazar do botão
         (totalWidth - buttonHeight).toPx()
     }
 
@@ -141,17 +132,15 @@ fun SlideToPlayButton(
             .width(totalWidth)
             .height(buttonHeight)
     ) {
-        // ----- Fundo principal (Cápsula 1) -----
         Box(
             modifier = Modifier
                 .matchParentSize()
                 .background(
-                    color = Color(0xFF387D32).copy(alpha = 0.2f), // LeafGreen 20%
+                    color = Color(0xFF387D32).copy(alpha = 0.2f),
                     shape = RoundedCornerShape(50)
                 )
         )
 
-        // ----- Fundo secundário (Cápsula 2, com padding) -----
         Box(
             modifier = Modifier
                 .matchParentSize()
@@ -162,7 +151,6 @@ fun SlideToPlayButton(
                 )
         )
 
-        // ----- Texto "Jogar" no centro -----
         Text(
             text = "Jogar",
             fontWeight = FontWeight.Bold,
@@ -171,8 +159,6 @@ fun SlideToPlayButton(
             modifier = Modifier.align(Alignment.Center)
         )
 
-        // ----- Cápsula verde acompanhando o arrasto -----
-        // Largura dinâmica = offsetX + altura do botão (para dar a sensação de "cápsula" se movendo)
         Box(
             modifier = Modifier
                 .align(Alignment.CenterStart)
@@ -180,17 +166,16 @@ fun SlideToPlayButton(
                 .width(with(localDensity) { offsetX.toDp() } + buttonHeight)
                 .height(buttonHeight)
                 .clip(RoundedCornerShape(50))
-                .background(Color(0xFF387D32)) // LeafGreen
+                .background(Color(0xFF387D32))
         )
 
-        // ----- Círculo mais escuro, arrastável -----
         Box(
             modifier = Modifier
-                // Define o offset horizontal do círculo com base em offsetX
+
                 .offset { IntOffset(x = offsetX.toInt(), y = 0) }
                 .size(buttonHeight)
                 .clip(CircleShape)
-                .background(Color(0xFF387D32)) // LeafGreen
+                .background(Color(0xFF387D32))
         ) {
             // Circulozinho interno, escuro
             Box(
@@ -198,9 +183,8 @@ fun SlideToPlayButton(
                     .fillMaxSize()
                     .padding(8.dp)
                     .clip(CircleShape)
-                    .background(Color(0xFF09520C)) // DarkMossGreen
+                    .background(Color(0xFF09520C))
             )
-            // Ícone de "chevron.right.2"
             Icon(
                 painter = painterResource(id = R.drawable.chevronduplo),
                 contentDescription = "Play",
@@ -210,27 +194,21 @@ fun SlideToPlayButton(
                     .size(32.dp)
             )
         }
-
-        // ----- Detectando o gesto de arrastar -----
-        // Cria uma área sensível ao toque do mesmo tamanho do botão
-        Box(
+                Box(
             modifier = Modifier
                 .matchParentSize()
-                // Pointer input para detectar arraste
+
                 .pointerInput(Unit) {
                     detectDragGestures(
                         onDrag = { change, dragAmount ->
-                            change.consume() // Consumimos esse evento de toque
+                            change.consume()
                             val newOffset = offsetX + dragAmount.x
-                            // Limitamos o offset entre 0 e maxOffsetPx
                             offsetX = newOffset.coerceIn(0f, maxOffsetPx)
                         },
                         onDragEnd = {
-                            // Se o círculo ultrapassar a metade, consideramos "concluído"
                             if (offsetX > maxOffsetPx / 2) {
                                 onSlideComplete()
                             } else {
-                                // Caso contrário, voltamos o círculo
                                 offsetX = 0f
                             }
                         }

@@ -12,6 +12,10 @@ import com.example.translateit_android.R
 val pottaOne = FontFamily(
     Font(R.font.pottaoneregular, FontWeight.Normal)
 )
+
+val lalezarRegular = FontFamily(
+    Font(R.font.lalezarregular, FontWeight.Normal)
+)
 // Set of Material typography styles to start with
 val Typography = Typography(
     bodyLarge = TextStyle(
