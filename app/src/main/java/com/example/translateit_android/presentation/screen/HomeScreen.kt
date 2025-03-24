@@ -36,11 +36,12 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.navigation.NavHostController
 import com.example.translateit_android.R
 import com.example.translateit_android.ui.theme.pottaOne
 
 @Composable
-fun HomeScreen(){
+fun HomeScreen(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -105,7 +106,9 @@ fun HomeScreen(){
             SlideToPlayButton(
                 modifier = Modifier
                     .padding(bottom = 72.dp)
-            ) {  }
+            ) {
+                navController.navigate("game_screen")
+            }
         }
     }
 }
@@ -177,7 +180,7 @@ fun SlideToPlayButton(
                 .clip(CircleShape)
                 .background(Color(0xFF387D32))
         ) {
-            // Circulozinho interno, escuro
+
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -216,11 +219,4 @@ fun SlideToPlayButton(
                 }
         )
     }
-}
-
-
-@Preview
-@Composable
-fun HomeScreenPreview(){
-    HomeScreen()
 }

@@ -1,5 +1,6 @@
 package com.example.translateit_android.presentation.screen
 
+import android.graphics.BlurMaskFilter
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,16 +18,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Outline
+import androidx.compose.ui.graphics.Paint
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawOutline
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.navigation.NavHostController
 import com.example.translateit_android.ui.theme.lalezarRegular
 import com.example.translateit_android.ui.theme.pottaOne
 
 @Composable
-fun GameScreen() {
+fun GameScreen(navController: NavHostController) {
     val list = listOf("Foco", "Fomentar", "Praia", "Casa")
 
     Column(
@@ -57,6 +68,7 @@ fun GameScreen() {
                 .fillMaxWidth(0.9f)
                 .fillMaxHeight(0.55f)
                 .padding(top = 16.dp)
+
         ) {
             Row(
                 modifier = Modifier
@@ -81,7 +93,38 @@ fun GameScreen() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(0.95f)
-                    .clip(shape = RoundedCornerShape(15.dp))
+                    .drawBehind {
+                        val shadowColor = Color(0x40000000)
+                        val cornerRadius = 15.dp.toPx()
+                        val blurPx = 4.dp.toPx()
+                        val offsetY = 4.dp.toPx()
+                        val path = Path().apply {
+                            addRoundRect(
+                                RoundRect(
+                                    rect = Rect(
+                                        left = 0f,
+                                        top = offsetY,
+                                        right = size.width,
+                                        bottom = size.height + offsetY
+                                    ),
+                                    cornerRadius = CornerRadius(cornerRadius)
+                                )
+                            )
+                        }
+
+                        drawIntoCanvas { canvas ->
+                            val composePaint = Paint().apply {
+                                color = shadowColor
+                            }
+                            val frameworkPaint = composePaint.asFrameworkPaint()
+                            frameworkPaint.maskFilter = BlurMaskFilter(blurPx, BlurMaskFilter.Blur.NORMAL)
+                            canvas.drawOutline(
+                                outline = Outline.Generic(path),
+                                paint = composePaint
+                            )
+                        }
+                    }
+                    .clip(RoundedCornerShape(15.dp))
                     .background(Color(0xFF09520c))
                     .align(Alignment.BottomCenter)
             ) {
@@ -90,17 +133,18 @@ fun GameScreen() {
                     fontSize = 64.sp,
                     color = Color.White,
                     fontFamily = lalezarRegular,
-                    modifier = Modifier
-                        .align(Alignment.Center)
+                    modifier = Modifier.align(Alignment.Center)
                 )
             }
+
+
         }
 
         Column(
             modifier = Modifier
                 .fillMaxWidth(1f)
                 .fillMaxHeight()
-                .padding(top = 56.dp)
+                .padding(top = 64.dp)
                 .clip(shape = RoundedCornerShape(3.dp))
                 .background(color = Color(0xFF387D32)),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -135,8 +179,42 @@ fun GameScreen() {
                             modifier = Modifier
                                 .width(165.dp)
                                 .height(62.dp)
+                                .drawBehind {
+                                    val shadowColor = Color(0x40000000)
+                                    val cornerRadius = 10.dp.toPx()
+                                    val blurPx = 4.dp.toPx()
+                                    val offsetY = 4.dp.toPx()
+                                    val path = Path().apply {
+                                        addRoundRect(
+                                            RoundRect(
+                                                rect = Rect(
+                                                    left = 0f,
+                                                    top = offsetY,
+                                                    right = size.width,
+                                                    bottom = size.height + offsetY
+                                                ),
+                                                cornerRadius = CornerRadius(cornerRadius)
+                                            )
+                                        )
+                                    }
+
+                                    drawIntoCanvas { canvas ->
+                                        val composePaint = Paint().apply {
+                                            color = shadowColor
+                                        }
+                                        val frameworkPaint = composePaint.asFrameworkPaint()
+                                        frameworkPaint.maskFilter = BlurMaskFilter(blurPx, BlurMaskFilter.Blur.NORMAL)
+                                        canvas.drawOutline(
+                                            outline = Outline.Generic(path),
+                                            paint = composePaint
+                                        )
+                                    }
+                                }
                                 .clip(shape = RoundedCornerShape(10.dp))
                                 .background(Color(0xFF053406))
+
+
+
                         ) {
                             Text(
                                 text = word[0],
@@ -152,9 +230,39 @@ fun GameScreen() {
                             modifier = Modifier
                                 .width(165.dp)
                                 .height(62.dp)
+                                .drawBehind {
+                                    val shadowColor = Color(0x40000000)
+                                    val cornerRadius = 10.dp.toPx()
+                                    val blurPx = 4.dp.toPx()
+                                    val offsetY = 4.dp.toPx()
+                                    val path = Path().apply {
+                                        addRoundRect(
+                                            RoundRect(
+                                                rect = Rect(
+                                                    left = 0f,
+                                                    top = offsetY,
+                                                    right = size.width,
+                                                    bottom = size.height + offsetY
+                                                ),
+                                                cornerRadius = CornerRadius(cornerRadius)
+                                            )
+                                        )
+                                    }
+
+                                    drawIntoCanvas { canvas ->
+                                        val composePaint = Paint().apply {
+                                            color = shadowColor
+                                        }
+                                        val frameworkPaint = composePaint.asFrameworkPaint()
+                                        frameworkPaint.maskFilter = BlurMaskFilter(blurPx, BlurMaskFilter.Blur.NORMAL)
+                                        canvas.drawOutline(
+                                            outline = Outline.Generic(path),
+                                            paint = composePaint
+                                        )
+                                    }
+                                }
                                 .clip(shape = RoundedCornerShape(10.dp))
                                 .background(Color(0xFF053406))
-                                .align(Alignment.CenterVertically)
                         ) {
                             Text(
                                 text = word[1],
