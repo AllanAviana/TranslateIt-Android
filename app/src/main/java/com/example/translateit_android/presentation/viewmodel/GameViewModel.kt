@@ -2,7 +2,9 @@ package com.example.translateit_android.presentation.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.example.translateit_android.R
 import com.example.translateit_android.data.GameUiState
+import com.example.translateit_android.data.ResultUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -10,6 +12,9 @@ class GameViewModel: ViewModel() {
 
     private val _uiState = MutableStateFlow(GameUiState())
     val uiState = _uiState.asStateFlow()
+
+    private val _resultUiState = MutableStateFlow(ResultUiState())
+    val resultUiState = _resultUiState.asStateFlow()
 
     val englishToPortugueseMap = mapOf(
         "apple" to "maçã",
@@ -91,9 +96,33 @@ class GameViewModel: ViewModel() {
             )
             randomWord()
         }else{
+            resultGame(_uiState.value.score)
             _uiState.value = _uiState.value.copy(
                 isGameOver = true
             )
         }
     }
+
+    private fun resultGame(score: Int){
+        if(score >= 30){
+            _resultUiState.value = _resultUiState.value.copy(
+                word = "Parabéns!",
+                sentence = "Voce acertou muitas\nquestoes!",
+                image = R.drawable.happyimage
+            )
+        }else{
+            _resultUiState.value = _resultUiState.value.copy(
+                word = "Que pena!",
+                sentence = "Voce acertou poucas\nquestões...",
+                image = R.drawable.badimage
+            )
+        }
+    }
+
+    fun resetGame(){
+        _uiState.value = GameUiState()
+        randomWord()
+    }
+
+
 }

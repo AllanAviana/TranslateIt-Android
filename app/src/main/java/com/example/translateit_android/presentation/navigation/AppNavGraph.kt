@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.translateit_android.presentation.screen.GameScreen
 import com.example.translateit_android.presentation.screen.HomeScreen
+import com.example.translateit_android.presentation.screen.ResultScreen
 import com.example.translateit_android.presentation.viewmodel.GameViewModel
 
 @Composable
@@ -21,6 +22,10 @@ fun AppNavGraph(){
 
         composable(route = AppNavigationRoute.GameScreen.route){
             GameScreen(navController, gameViewModel)
+        }
+
+        composable(route = AppNavigationRoute.ResultScreen.route){
+            ResultScreen(gameViewModel, navController)
         }
     }
 
