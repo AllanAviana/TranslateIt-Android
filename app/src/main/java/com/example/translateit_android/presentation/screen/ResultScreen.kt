@@ -1,5 +1,7 @@
 package com.example.translateit_android.presentation.screen
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -13,9 +15,15 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -29,6 +37,17 @@ import com.example.translateit_android.ui.theme.pottaOne
 fun ResultScreen(gameViewModel: GameViewModel, navController: NavHostController) {
 
     val uiState = gameViewModel.resultUiState.collectAsState()
+
+    var startAnimation by remember { mutableStateOf(false) }
+
+    val alpha by animateFloatAsState(
+        targetValue = if (startAnimation) 1f else 0f,
+        animationSpec = tween(durationMillis = 2000)
+    )
+
+    LaunchedEffect(Unit) {
+        startAnimation = true
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -79,6 +98,7 @@ fun ResultScreen(gameViewModel: GameViewModel, navController: NavHostController)
                 .align(Alignment.Center)
                 .zIndex(1f)
                 .padding(bottom  =40.dp)
+                .alpha(alpha)
         )
 
         Column(

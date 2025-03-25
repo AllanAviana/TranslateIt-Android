@@ -42,8 +42,6 @@ import com.example.translateit_android.ui.theme.pottaOne
 
 @Composable
 fun GameScreen(navController: NavHostController, gameViewModel: GameViewModel) {
-    val list = listOf("Foco", "Fomentar", "Praia", "Casa")
-
     val uiState = gameViewModel.uiState.collectAsState()
 
     LaunchedEffect(uiState.value.isGameOver) {
@@ -94,7 +92,7 @@ fun GameScreen(navController: NavHostController, gameViewModel: GameViewModel) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Score: 30",
+                    text = "Score: ${uiState.value.score}",
                     fontSize = 32.sp,
                     color = Color.White,
                     fontFamily = pottaOne
@@ -231,7 +229,7 @@ fun GameScreen(navController: NavHostController, gameViewModel: GameViewModel) {
                         ) {
                             Text(
                                 text = word[0],
-                                fontSize = 32.sp,
+                                fontSize = 28.sp,
                                 color = Color.White,
                                 fontFamily = pottaOne,
                                 modifier = Modifier
@@ -282,7 +280,7 @@ fun GameScreen(navController: NavHostController, gameViewModel: GameViewModel) {
                         ) {
                             Text(
                                 text = word[1],
-                                fontSize = 32.sp,
+                                fontSize = 28.sp,
                                 color = Color.White,
                                 fontFamily = pottaOne,
                                 modifier = Modifier

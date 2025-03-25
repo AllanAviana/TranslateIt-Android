@@ -1,5 +1,7 @@
 package com.example.translateit_android.presentation.screen
 
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -19,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,6 +45,18 @@ import com.example.translateit_android.ui.theme.pottaOne
 
 @Composable
 fun HomeScreen(navController: NavHostController) {
+
+    var startAnimation by remember { mutableStateOf(false) }
+
+    val offsetX by animateDpAsState(
+        targetValue = if (startAnimation) 0.dp else (-400).dp,
+        animationSpec = tween(durationMillis = 2000)
+    )
+
+    LaunchedEffect(Unit) {
+        startAnimation = true
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -92,6 +107,7 @@ fun HomeScreen(navController: NavHostController) {
                 .align(Alignment.Center)
                 .zIndex(1f)
                 .padding(bottom  = 80.dp)
+                .offset(x = offsetX)
             )
 
         Column(
