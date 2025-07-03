@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="Theme.MyApp" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Define o ícone animado da splash screen -->
         <item name="android:windowSplashScreenAnimatedIcon">@drawable/logo</item>
         <!-- Define a cor de fundo da splash screen -->
         <item name="android:windowBackground">@color/purple_200</item>
     </style>
-
 </resources>
