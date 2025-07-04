@@ -1,4 +1,4 @@
-package com.example.translateit_android.data
+package com.example.translateit_android.presentation.uistate
 
 import com.example.translateit_android.R
 

@@ -1,128 +1,71 @@
 package com.example.translateit_android.presentation.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.translateit_android.R
-import com.example.translateit_android.data.GameUiState
-import com.example.translateit_android.data.ResultUiState
+import com.example.translateit_android.data.GameRepository
+import com.example.translateit_android.presentation.uistate.GameUiState
+import com.example.translateit_android.presentation.uistate.ResultUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import javax.inject.Inject
 
-class GameViewModel: ViewModel() {
+@HiltViewModel
+class GameViewModel @Inject constructor(
+    private val repo: GameRepository
+) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(GameUiState())
-    val uiState = _uiState.asStateFlow()
+    /* --------------------- main game state (question, score, etc.) --------------------- */
+    private val _uiState = MutableStateFlow(GameUiState())   // mutable inside VM
+    val uiState = _uiState.asStateFlow()                     // read-only for the UI
 
+    /* --------------------- end-of-game state (message + image) ------------------------- */
     private val _resultUiState = MutableStateFlow(ResultUiState())
     val resultUiState = _resultUiState.asStateFlow()
 
-    val englishToPortugueseMap = mapOf(
-        "apple" to "maçã",
-        "house" to "casa",
-        "book" to "livro",
-        "car" to "carro",
-        "water" to "água",
-        "food" to "comida",
-        "love" to "amor",
-        "friend" to "amigo",
-        "family" to "família",
-        "dog" to "cachorro",
-        "cat" to "gato",
-        "computer" to "computador",
-        "phone" to "telefone",
-        "music" to "música",
-        "sun" to "sol",
-        "moon" to "lua",
-        "star" to "estrela",
-        "sky" to "céu",
-        "earth" to "terra",
-        "fire" to "fogo",
-        "tree" to "árvore",
-        "flower" to "flor",
-        "river" to "rio",
-        "mountain" to "montanha",
-        "sea" to "mar",
-        "rain" to "chuva",
-        "snow" to "neve",
-        "wind" to "vento",
-        "child" to "criança",
-        "school" to "escola",
-        "teacher" to "professor",
-        "student" to "estudante",
-        "work" to "trabalho",
-        "money" to "dinheiro",
-        "time" to "tempo",
-        "day" to "dia",
-        "night" to "noite",
-        "morning" to "manhã",
-        "evening" to "noite",
-        "happy" to "feliz",
-        "sad" to "triste",
-        "big" to "grande",
-        "small" to "pequeno",
-        "fast" to "rápido",
-        "slow" to "devagar",
-        "new" to "novo",
-        "old" to "velho",
-        "clean" to "limpo",
-        "dirty" to "sujo",
-        "hot" to "quente"
-    )
+    /* Generate the very first question as soon as the VM is created */
+    init { randomWord() }
 
-    init {
-        randomWord()
-    }
-
-    private fun randomWord(){
-        val randomWord = englishToPortugueseMap.keys.random()
-        val options = englishToPortugueseMap.values
-            .shuffled()
-            .filter { it != englishToPortugueseMap[randomWord] }
-            .take(3) + englishToPortugueseMap[randomWord]!!
+    /** Requests a new question from the repository and updates _uiState */
+    private fun randomWord() {
+        val (wordEn, answerPt, options) = repo.generateQuestion()
 
         _uiState.value = _uiState.value.copy(
-            currentWord = randomWord,
-            answer = englishToPortugueseMap[randomWord]!!,
-            options = options.shuffled()
+            currentWord = wordEn,   // English prompt word
+            answer      = answerPt, // correct Portuguese translation
+            options     = options   // shuffled list of 4 choices
         )
-        Log.d("GameViewModel", "Random word: ${_uiState.value}")
     }
 
-    fun result(word: String){
-
-        if(word == _uiState.value.answer){
+    fun result(word: String) {
+        if (word == _uiState.value.answer) {
             _uiState.value = _uiState.value.copy(
                 score = _uiState.value.score + 10
             )
-            randomWord()
-        }else{
-            resultGame(_uiState.value.score)
-            _uiState.value = _uiState.value.copy(
-                isGameOver = true
-            )
+            randomWord()                // next round
+        } else {
+            buildResult(_uiState.value.score)
+            _uiState.value = _uiState.value.copy(isGameOver = true)
         }
     }
 
-    private fun resultGame(score: Int){
-        if(score >= 30){
-            _resultUiState.value = _resultUiState.value.copy(
-                word = "Parabéns!",
-                sentence = "Voce acertou muitas\nquestoes!",
-                image = R.drawable.happyimage
-            )
-        }else{
-            _resultUiState.value = _resultUiState.value.copy(
-                word = "Que pena!",
-                sentence = "Voce acertou poucas\nquestões...",
-                image = R.drawable.badimage
-            )
-        }
+    /** Builds the ResultUiState based on the final score */
+    private fun buildResult(score: Int) {
+        val success = score >= 30
+        _resultUiState.value = _resultUiState.value.copy(
+            word     = if (success) "Parabéns!" else "Que pena!",
+            sentence = if (success)
+                "Você acertou muitas\nquestões!"
+            else
+                "Você acertou poucas\nquestões...",
+            image    = if (success) R.drawable.happyimage
+            else R.drawable.badimage
+        )
     }
 
-    fun resetGame(){
-        _uiState.value = GameUiState()
-        randomWord()
+    /** Resets score & flags, then starts a fresh game */
+    fun resetGame() {
+        _uiState.value = GameUiState()  // clear everything
+        randomWord()                    // first question of the new session
     }
-
-
 }

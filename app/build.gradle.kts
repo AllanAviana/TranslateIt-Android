@@ -2,6 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    kotlin("kapt")
+    id("com.google.dagger.hilt.android")   // ⬅️ habilita Hilt no módulo
+
 }
 
 android {
@@ -40,7 +43,15 @@ android {
 }
 
 dependencies {
+
+    testImplementation("junit:junit:4.13.2")
+
+    kapt("com.google.dagger:hilt-compiler:2.51")
+    implementation("com.google.dagger:hilt-android:2.51")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+
     implementation ("androidx.core:core-splashscreen:1.0.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

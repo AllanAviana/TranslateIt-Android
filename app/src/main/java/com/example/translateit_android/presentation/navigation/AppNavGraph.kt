@@ -1,6 +1,7 @@
 package com.example.translateit_android.presentation.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -12,7 +13,7 @@ import com.example.translateit_android.presentation.viewmodel.GameViewModel
 @Composable
 fun AppNavGraph(){
     val navController = rememberNavController()
-    val gameViewModel = GameViewModel()
+    val gameViewModel: GameViewModel = hiltViewModel()
 
     NavHost(navController = navController, startDestination = AppNavigationRoute.HomeScreen.route){
 
@@ -28,5 +29,4 @@ fun AppNavGraph(){
             ResultScreen(gameViewModel, navController)
         }
     }
-
 }
