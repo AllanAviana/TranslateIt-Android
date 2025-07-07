@@ -5,9 +5,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.translateit_android.presentation.screen.GameScreen
-import com.example.translateit_android.presentation.screen.HomeScreen
-import com.example.translateit_android.presentation.screen.ResultScreen
+import com.example.translateit_android.presentation.screen.game.GameScreen
+import com.example.translateit_android.presentation.screen.home.HomeScreen
+import com.example.translateit_android.presentation.screen.result.ResultScreen
 import com.example.translateit_android.presentation.viewmodel.GameViewModel
 
 @Composable

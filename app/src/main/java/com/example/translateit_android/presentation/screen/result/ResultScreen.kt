@@ -1,4 +1,4 @@
-package com.example.translateit_android.presentation.screen
+package com.example.translateit_android.presentation.screen.result
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
